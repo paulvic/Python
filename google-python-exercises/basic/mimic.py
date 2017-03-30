@@ -41,19 +41,42 @@ columns, so the output looks better.
 
 """
 
+import codecs
 import random
 import sys
 
 
 def mimic_dict(filename):
   """Returns mimic dict mapping each word to list of words which follow it."""
-  # +++your code here+++
-  return
+  mimic_dict = {}
+  with codecs.open(filename, 'rU', 'utf-8') as f:
+    previous = ""
+    for current in f.read().lower().split():
+      if previous in mimic_dict:
+          mimic_dict[previous].append(current)
+      elif previous != "":
+        mimic_dict[previous] = [current,]          
+      previous = current 
 
+  return mimic_dict
 
 def print_mimic(mimic_dict, word):
   """Given mimic dict and start word, prints 200 random words."""
-  # +++your code here+++
+  line = ""
+  for i in range(200):
+    if word in mimic_dict:
+      word = random.choice(mimic_dict[word])
+    else:
+      word = random.choice(mimic_dict.keys())
+
+    if (len(line) + len(word)) > 79:
+      print line
+      line = ""
+    line += " " + word
+
+  if line != "":
+    print line
+
   return
 
 
