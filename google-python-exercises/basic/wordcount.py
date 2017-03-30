@@ -46,6 +46,7 @@ import codecs # adds support for reading unicode files
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
 
+def get_word_count(filename):
   word_counts = {}
   with codecs.open(filename, 'rU', 'utf-8') as f:
     for line in f:
@@ -57,21 +58,26 @@ import codecs # adds support for reading unicode files
 
   return word_counts.items()
 
+def get_sorted_word_count(filename):
+  word_counts = get_word_count(filename)
   return sorted(word_counts, key=get_value, reverse=True)
 
 def get_value(item):
   return item[-1]
 
+def print_word_count(words):
   for word, count in words:
     print word + " \t: " + str(count)
 
 # Prints the count of how often each word appears in a text file, 
 # sorted from most occurrences to least.
 def print_words(filename):  
+  print_word_count(get_word_count(filename))
 
 # Prints the count of how often each word appears in a text file, 
 # sorted from most occurrences to least.
 def print_top(filename): 
+  print_word_count(get_sorted_word_count(filename)[:20])
 
 ###
 
