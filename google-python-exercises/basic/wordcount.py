@@ -38,12 +38,40 @@ print_words() and print_top().
 """
 
 import sys
+import codecs # adds support for reading unicode files
 
 # +++your code here+++
 # Define print_words(filename) and print_top(filename) functions.
 # You could write a helper utility function that reads a file
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
+
+  word_counts = {}
+  with codecs.open(filename, 'rU', 'utf-8') as f:
+    for line in f:
+      for word in line.lower().split():
+        if word in word_counts:
+          word_counts[word] += 1
+        else:
+          word_counts[word] = 1
+
+  return word_counts.items()
+
+  return sorted(word_counts, key=get_value, reverse=True)
+
+def get_value(item):
+  return item[-1]
+
+  for word, count in words:
+    print word + " \t: " + str(count)
+
+# Prints the count of how often each word appears in a text file, 
+# sorted from most occurrences to least.
+def print_words(filename):  
+
+# Prints the count of how often each word appears in a text file, 
+# sorted from most occurrences to least.
+def print_top(filename): 
 
 ###
 
