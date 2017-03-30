@@ -8,6 +8,7 @@
 
 import sys
 import re
+import codecs
 
 """Baby Names exercise
 
@@ -41,7 +42,28 @@ def extract_names(filename):
   ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
   """
   # +++your code here+++
-  return
+  names = []
+  with codecs.open(filename, 'rU', 'utf-8') as f:
+    text = f.read()
+    # <h3 align="center">Popularity in 1990</h3>
+    match = re.search(r'<h3 align="center">Popularity in (\d\d\d\d)</h3>', text)
+    year = "1900"
+    if match:
+      year = match.group(1)
+
+    # <tr align="right"><td>1</td><td>Michael</td><td>Jessica</td>
+    matches = re.findall(r'<tr align="right"><td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>', text)
+    if matches:
+      for match in matches:
+        rank = match[0]
+        boy_name = match[1]
+        girl_name = match[2]
+        names.append(boy_name + " " + rank)
+        names.append(girl_name + " " + rank)
+       
+    sorted_names = sorted(names)
+    sorted_names.insert(0, year)
+  return sorted_names
 
 
 def main():
@@ -63,6 +85,19 @@ def main():
   # +++your code here+++
   # For each filename, get the names, then either print the text output
   # or write it to a summary file
+  
+  for filename in args:
+    names = extract_names(filename)
+
+    text = '\n'.join(names)
+
+    if not summary:
+      print text
+    else:
+      # write to summary file
+      with codecs.open(filename + ".summary", 'wU', 'utf-8') as f:
+        f.write(text + "\n")
+    
   
 if __name__ == '__main__':
   main()
