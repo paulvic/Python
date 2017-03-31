@@ -11,6 +11,7 @@ import re
 import os
 import shutil
 import commands
+import zipfile
 
 """Copy Special exercise
 """
@@ -19,6 +20,29 @@ import commands
 # Write functions and modify main() to call them
 
 
+def get_special_paths(dir):
+  paths = []
+  filenames = os.listdir(dir)
+  for filename in filenames:
+    match = re.search(r'__\w+__', filename)
+    if match:
+      paths.append(os.path.abspath(os.path.join(dir, filename)))
+  return paths
+
+def copy_to(paths, dir):
+  if not os.path.exists(dir):
+    os.makedirs(dir)
+  for path in paths:
+    shutil.copy(path, dir)
+  return
+
+def zip_to(paths, zip_path):
+  zipf = zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED)
+  for path in paths:
+    zipf.write(path)
+  zipf.close()
+
+  return
 
 def main():
   # This basic command line argument parsing code is provided.
@@ -50,6 +74,15 @@ def main():
 
   # +++your code here+++
   # Call your functions
+  paths = get_special_paths(args[0])
+
+  if todir:
+    copy_to(paths, todir)
+  elif tozip:
+    zip_to(paths, tozip)
+  else:
+    print '\n'.join(paths)
+
   
 if __name__ == "__main__":
   main()
